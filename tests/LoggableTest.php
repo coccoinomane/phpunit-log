@@ -18,7 +18,7 @@ class LoggableTest extends TestCase
     /**
      * Test the log method.
      */
-    public function testLog()
+    public function testLog(): void
     {
         static::deleteLogFile();
         $this->log('test');
@@ -28,7 +28,7 @@ class LoggableTest extends TestCase
     /**
      * Test the log method with multiple calls.
      */
-    public function testLogMultiple()
+    public function testLogMultiple(): void
     {
         static::deleteLogFile();
         $this->log('test');
@@ -42,7 +42,7 @@ class LoggableTest extends TestCase
     /**
      * Test the log method with an array argument.
      */
-    public function testLogArray()
+    public function testLogArray(): void
     {
         static::deleteLogFile();
         $this->log(['test']);
@@ -55,7 +55,7 @@ class LoggableTest extends TestCase
     /**
      * Test the log method with an object argument.
      */
-    public function testLogObject()
+    public function testLogObject(): void
     {
         static::deleteLogFile();
         $obj = new \stdClass();
@@ -71,7 +71,7 @@ class LoggableTest extends TestCase
      * Test that the logs folder will be read from $_ENV['logsPath']
      * and created if it does not exist
      */
-    public function testLogFolderCreated()
+    public function testLogFolderCreated(): void
     {
         // Set logsPath to a non-existent folder
         $_ENV['logsPath'] = 'tests/logs/' . uniqid();
@@ -109,6 +109,9 @@ class LoggableTest extends TestCase
         if (is_dir($this->tempDir)) {
             // Empty the folder
             $files = glob($this->tempDir . '/*');
+            if ($files === false) {
+                return;
+            }
             foreach (array_filter($files, 'is_file') as $file) {
                 unlink($file);
             }

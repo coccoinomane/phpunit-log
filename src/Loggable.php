@@ -27,6 +27,8 @@ trait Loggable
 {
     /**
      * Print a log message to console.
+     *
+     * @param mixed $message
      */
     protected static function print($message): void
     {
@@ -75,12 +77,22 @@ trait Loggable
     /**
      * The log will be sent to the stream returned by
      * this method
+     *
+     * @return resource
      */
     protected static function getLogStream()
     {
         static::maybeCreateDir();
 
-        return fopen(static::getLogFilePath(), 'a');
+        $filePath = static::getLogFilePath();
+
+        $file = fopen($filePath, 'a');
+
+        if (!$file) {
+            throw new \Exception("Could not open log file {$filePath}");
+        }
+
+        return $file;
     }
 
     /**
