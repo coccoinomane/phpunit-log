@@ -14,8 +14,8 @@ Defines the `Loggable` trait to log from within your PHPUnit tests.
 - Customize the log folder via the `logsPath` environment variable.
 - To delete the log files before each run:
   ```php
-  if (file_exists(self::getLogFilePath())) {
-    unlink(self::getLogFilePath());
+  public static function setUpBeforeClass(): void {
+    static::deleteLogFile();
   }
   ```
 - For further customizations, see the docs in [`Loggable`](./src/Loggable.php) or the tests in [`LoggableTest`](./tests/LoggableTest.php).
