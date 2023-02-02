@@ -13,7 +13,7 @@ namespace PHPUnitLog;
  *
  * - Choose a custom subfolder for the log files via the environment variable
  *   'logsPath'.
- * 
+ *
  * - You can change the full path of the log file (including its name and
  *   extension) by overriding the static method getLogFilePath().
  *
@@ -25,87 +25,87 @@ namespace PHPUnitLog;
  */
 trait Loggable
 {
-	/**
-	 * Print a log message to console.
-	 */
-	protected static function print( $message ): void
-	{
-		static::log( $message, STDERR );
-	}
+    /**
+     * Print a log message to console.
+     */
+    protected static function print($message): void
+    {
+        static::log($message, STDERR);
+    }
 
-	/**
-	 * Print a log message to file.
-	 *
-	 * @param mixed $message
-	 * @param resource $stream optional stream to which the message will be
-	 * written. If not specified, the stream returned by getLogStream() will
-	 * be used.
-	 */
-	protected static function log( $message, $stream = null ): void
-	{
-		if ( ! $stream ) {
-			$stream = static::getLogStream();
-		}
+    /**
+     * Print a log message to file.
+     *
+     * @param mixed $message
+     * @param resource $stream optional stream to which the message will be
+     * written. If not specified, the stream returned by getLogStream() will
+     * be used.
+     */
+    protected static function log($message, $stream = null): void
+    {
+        if (!$stream) {
+            $stream = static::getLogStream();
+        }
 
-		if ( is_array( $message ) || is_object( $message ) ) {
-			fwrite( $stream, print_r( $message, true) );
-		}
-		else {
-			fwrite( $stream, $message );
-		}
+        if (is_array($message) || is_object($message)) {
+            fwrite($stream, print_r($message, true));
+        } else {
+            fwrite($stream, $message);
+        }
 
-		fwrite( $stream, PHP_EOL );
-	}
+        fwrite($stream, PHP_EOL);
+    }
 
-	/**
-	 * Path to the log file
-	 */
-	protected static function getLogFilePath(): string
-	{
-		$dir = $_ENV['logsPath'] ?? 'tests/logs';
+    /**
+     * Path to the log file
+     */
+    protected static function getLogFilePath(): string
+    {
+        $dir = $_ENV['logsPath'] ?? 'tests/logs';
 
-		$path = $dir
-			. DIRECTORY_SEPARATOR
-			. (new \ReflectionClass( static::class ))->getShortName()
-			. '.log';
+        $path =
+            $dir .
+            DIRECTORY_SEPARATOR .
+            (new \ReflectionClass(static::class))->getShortName() .
+            '.log';
 
-		return $path;
-	}
+        return $path;
+    }
 
-	/**
-	 * The log will be sent to the stream returned by
+    /**
+     * The log will be sent to the stream returned by
      * this method
-	 */
-	protected static function getLogStream()
-	{
-		static::maybeCreateDir();
+     */
+    protected static function getLogStream()
+    {
+        static::maybeCreateDir();
 
-		return fopen( static::getLogFilePath(), 'a' );
-	}
+        return fopen(static::getLogFilePath(), 'a');
+    }
 
-	/**
-	 * Create the logs directory if it does not exist
-	 */
-	protected static function maybeCreateDir(): bool
-	{
-		$dir = dirname( static::getLogFilePath() );
+    /**
+     * Create the logs directory if it does not exist
+     */
+    protected static function maybeCreateDir(): bool
+    {
+        $dir = dirname(static::getLogFilePath());
 
-		if ( ! file_exists( $dir ) ) {
-			return mkdir( $dir, 0744, true );
-		}
+        if (!file_exists($dir)) {
+            return mkdir($dir, 0744, true);
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	/**
-	 * Delete log file for the class
-	 */
-	protected static function deleteLogFile(): bool
-	{
-		if ( ! file_exists( static::getLogFilePath() ) ) {
-			return true;
-		}
+    /**
+     * Delete log file for the class
+     */
+    protected static function deleteLogFile(): bool
+    {
+        if (!file_exists(static::getLogFilePath())) {
+            return true;
+        }
 
-		return unlink( static::getLogFilePath() );
-	}
+        return unlink(static::getLogFilePath());
+    }
 }
